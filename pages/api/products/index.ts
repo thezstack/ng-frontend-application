@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-
+import { Product } from '@/types/product';
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	try {
 		// Save the data to the collection
-		const getRes = await fetch(`https://dummyjson.com/products?offset=0&limit=10`, {
+		const getRes = await fetch(`https://dummyjson.com/products?offset=0&limit=6`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json'
@@ -16,22 +16,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			throw new Error('An error occurred while fetching the data');
 		}
 
-		const formattedToQuests = getRes.map((quest: any) => {
+		const formattedToProducts = getRes.map((data: Product) => {
 			return {
-				id: quest.id,
-				skillTree: quest.category.replace('-', ' '), // 'home-decoration' => 'home decoration'
-				skill: quest.brand,
-				title: quest.title,
-				difficulty: Math.floor(quest.rating),
-				experience: quest.stock * 100,
-				gold: quest.price,
+				id: data.id,
+				category: data.category.replace('-', ' '), // 'home-decoration' => 'home decoration'
+				brand: data.brand,
+				title: data.title,
+				rating: Math.floor(data.rating),
+				stock: data.stock * 100,
+				price: data.price,
+				discountPercentage: data.discountPercentage,
 				type: '-',
-				cover: quest.thumbnail
+				thumbnail: data.thumbnail
 			};
 		});
 
 		// Send a response back to the client
-		res.status(200).json(formattedToQuests);
+		res.status(200).json(formattedToProducts);
 	} catch (error) {
 		// If the request fails, an error will be thrown
 		console.error(error);

@@ -3,32 +3,28 @@ import { NextApiRequest, NextApiResponse } from 'next';
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	try {
 		// Fetch a product by id
-		const questRes = await fetch(`https://dummyjson.com/products/${String(req.query.id)}`, {
+		const product = await fetch(`https://dummyjson.com/products/${String(req.query.id)}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json'
 			}
 		}).then((response) => response.json());
 
-		if (questRes.code) {
+		if (product.code) {
 			throw new Error('An error occurred while fetching the data');
 		}
 
 		const formattedToQuests = {
-			id: questRes.id,
-			skillTree: questRes.category.replace('-', ' '), // 'home-decoration' => 'home decoration'
-			skill: questRes.brand,
-			title: questRes.title,
-			difficulty: Math.floor(questRes.rating),
-			experience: questRes.stock * 100,
-			gold: questRes.price,
+			id: product.id,
+			category: product.category.replace('-', ' '), // 'home-decoration' => 'home decoration'
+			brand: product.brand,
+			title: product.title,
+			rating: Math.floor(product.rating),
+			stock: product.stock * 100,
+			price: product.price,
+			discountPercentage: product.discountPercentage,
 			type: '-',
-			cover: questRes.thumbnail,
-			description: questRes.description,
-			rewards: {
-				experience: questRes.stock * 100,
-				gold: questRes.price
-			}
+			cover: product.thumbnail
 		};
 
 		// Send a response back to the client

@@ -1,5 +1,5 @@
 import Head from 'next/head';
-
+import CardList from '../components/CardList';
 export default function Home() {
 	return (
 		<>
@@ -8,7 +8,9 @@ export default function Home() {
 				<meta name='description' content='Node Guardians frontend' />
 			</Head>
 
-			<main></main>
+			<main>
+				<CardList />
+			</main>
 		</>
 	);
 }
